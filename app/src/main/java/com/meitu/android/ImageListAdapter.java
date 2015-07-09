@@ -41,7 +41,7 @@ public class ImageListAdapter extends MyBaseAdapter {
         DynamicHeightImageView imageView = holder.obtainView(convertView, R.id.list_item_image);
         TextView num = holder.obtainView(convertView, R.id.list_item_num);
 
-        ImageLoaderHelper.displayImage(imageListModelList.get(position).getSmall_image(), imageView);
+        ImageLoaderHelper.displayImage(imageListModelList.get(position).getMid_image(), imageView);
         num.setText(imageListModelList.get(position).getNum());
 
         return convertView;

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">魅图</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="about_text">此APP是本人在业余时间所写，您如果觉得好，求个赞!\n如果您有任何问题，请到偶微博留言(http://weibo.com/wvitas) </string>
+</resources>

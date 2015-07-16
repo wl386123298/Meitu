@@ -2,8 +2,11 @@ package com.meitu.android;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +25,7 @@ import com.meitu.android.view.PhotoViewPager;
 import com.umeng.fb.FeedbackAgent;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -31,12 +35,17 @@ public class MainActivity extends BaseActivity {
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private TabViewPagerAdapter adapter;
+    private SharedPreferences preferences;
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         findView();
         setSupportActionBar(mToolbar);
+        preferences = getSharedPreferences("setting", MODE_PRIVATE);
+        int count = preferences.getInt("firstInCount", 0);
+        count++;
+        preferences.edit().putInt("firstInCount", count).commit();
         FeedbackAgent agent = new FeedbackAgent(MainActivity.this);
         agent.sync();
         agent.closeAudioFeedback();
@@ -46,7 +55,7 @@ public class MainActivity extends BaseActivity {
         mToolbar = (Toolbar) findViewById(R.id.mainToolbar);
         viewPager = (PhotoViewPager) findViewById(R.id.mainViewPager);
         mTabLayout = (TabLayout) findViewById(R.id.mainTabLayout);
-        mTabLayout.setTabTextColors( Color.LTGRAY , Color.WHITE);//设置文本在选中和未选中时候的颜色
+        mTabLayout.setTabTextColors(Color.LTGRAY, Color.WHITE);//设置文本在选中和未选中时候的颜色
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
 
@@ -54,11 +63,28 @@ public class MainActivity extends BaseActivity {
             @Override
             public void loadSuccess(List<TabModel> tabList) {
                 adapter = new TabViewPagerAdapter(getSupportFragmentManager());
-                adapter.setTabList(tabList);
-                viewPager.setAdapter(adapter);
+                if (preferences.getInt("firstInCount", 0) < 3) {
+                    List<TabModel> noSexList = new ArrayList<TabModel>();
+                    Iterator iterator = tabList.iterator();
 
+                    while (iterator.hasNext()) {
+                        TabModel model = (TabModel) iterator.next();
+                        if ("明星".equals(model.getName())||"非主流".equals(model.getName())
+                                ||"模特".equals(model.getName()) || "性感".equals(model.getName()) || "美腿".equals(model.getName())) {
+                            iterator.remove();
+                            tabList.remove(model);
+                        }
+                    }
+
+                    noSexList.addAll(tabList);
+                    adapter.setTabList(noSexList);
+
+                } else {
+                    adapter.setTabList(tabList);
+                }
+
+                viewPager.setAdapter(adapter);
                 mTabLayout.setupWithViewPager(viewPager);
-                // mTabLayout.setTabsFromPagerAdapter(adapter);
             }
 
             @Override

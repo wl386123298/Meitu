@@ -1,23 +1,18 @@
 package com.meitu.android;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 
-import com.etsy.android.grid.StaggeredGridView;
-import com.lidroid.xutils.util.LogUtils;
 import com.meitu.android.model.ImageListModel;
 import com.meitu.android.utils.HttpUtils;
+import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +21,11 @@ import java.util.List;
  * author:wl
  * time: 下午 3:04
  */
-public class ImageListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener, AbsListView.OnScrollListener {
+public class ImageListFragment extends Fragment implements PullLoadMoreRecyclerView.PullLoadMoreListener, ImageListAdapter.OnRecyclerViewItemClickListener {
     private String category_id;
-    private SwipeRefreshLayout mLoadingLayout;
     private int page = 1;
     private ImageListAdapter adapter;
-    private StaggeredGridView mGridView;
+    private PullLoadMoreRecyclerView mGridView;
     private List<ImageListModel> images = new ArrayList<>();
     private boolean hasMore;//是否有更多
 
@@ -45,25 +39,23 @@ public class ImageListFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.image_list_fragment, null);
-        mLoadingLayout = (SwipeRefreshLayout) view.findViewById(R.id.imageListLoadingLayout);
-        mLoadingLayout.setColorSchemeColors(R.color.primary);
-        mGridView = (StaggeredGridView) view.findViewById(R.id.imageListGridView);
+        View view = inflater.inflate(R.layout.image_list_fragment, container, false);
+        mGridView = (PullLoadMoreRecyclerView) view.findViewById(R.id.pullLoadMoreRecyclerView);
 
-        adapter = new ImageListAdapter(getActivity());
+        initPullRecycleView();
+        adapter = new ImageListAdapter();
         mGridView.setAdapter(adapter);
-
         loadData(category_id);
-        initListener();
+
+        adapter.setOnRecyclerViewItemClickListener(this);
+        mGridView.setOnPullLoadMoreListener(this);
 
         return view;
     }
 
-
-    private void initListener() {
-        mLoadingLayout.setOnRefreshListener(this);
-        mGridView.setOnItemClickListener(this);
-        mGridView.setOnScrollListener(this);
+    private void initPullRecycleView() {
+        mGridView.setStaggeredGridLayout(2);
+        mGridView.setColorSchemeResources(R.color.primary);
     }
 
     /**
@@ -75,25 +67,23 @@ public class ImageListFragment extends Fragment implements SwipeRefreshLayout.On
         HttpUtils.getImageList(getActivity(), page, category_id, new HttpUtils.RequestResultListener<ImageListModel>() {
             @Override
             public void loadSuccess(List<ImageListModel> imageListModelList) {
-                mLoadingLayout.setRefreshing(false);
+                mGridView.setPullLoadMoreCompleted();
+                if (page == 1) images.clear();
+
                 if (imageListModelList != null) {
-                    if (page == 1) {
-                        images = imageListModelList;
-                    }else {
-                        images.addAll(imageListModelList);
-                        hasMore = false;
-                    }
+                    images.addAll(imageListModelList);
+                    hasMore = false;
                 }
 
-                if (images != null){
+                if (images != null) {
                     adapter.setImageListModelList(images);
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyItemInserted(images.size());
                 }
             }
 
             @Override
             public void loadFail(String message) {
-                mLoadingLayout.setRefreshing(false);
+                mGridView.setPullLoadMoreCompleted();
             }
         });
     }
@@ -106,28 +96,21 @@ public class ImageListFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), PreviewPictureActivity.class);
-        intent.putExtra(PreviewPictureActivity.PREVIEW_IMAGES_ID_KEY, images.get(position).getId());
-        intent.putExtra(PreviewPictureActivity.PREVIEW_IMAGES_CATEGORY_KEY, category_id);
-        startActivity(intent);
-
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    public void onLoadMore() {
         if (!hasMore) {
-            int lastInScreen = firstVisibleItem + visibleItemCount;
-            if (lastInScreen >= totalItemCount) {
-                hasMore = true;
-                page ++;
-                loadData(category_id);
-            }
+            hasMore = true;
+            page++;
+            loadData(category_id);
+
         }
+    }
+
+    @Override
+    public void onItemClick(View view, ImageListModel model) {
+        Intent intent = new Intent(getActivity(), PreviewPictureActivity.class);
+        intent.putExtra(PreviewPictureActivity.PREVIEW_IMAGES_ID_KEY, model.getId());
+        intent.putExtra(PreviewPictureActivity.PREVIEW_IMAGES_CATEGORY_KEY, category_id);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view, getString(R.string.imageTransitionName));
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 }

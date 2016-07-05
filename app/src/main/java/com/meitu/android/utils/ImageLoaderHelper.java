@@ -2,28 +2,19 @@ package com.meitu.android.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.widget.ImageView;
 
-import com.bumptech.glide.BitmapTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.meitu.android.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
 public class ImageLoaderHelper {
     private static ImageLoader imageLoader = ImageLoader.getInstance();
@@ -32,12 +23,11 @@ public class ImageLoaderHelper {
 
     public static DisplayImageOptions initOptionsForCommonImage() {
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.ic_default_loading_image)
-                .showImageForEmptyUri(R.mipmap.ic_default_loading_image)
-                .showImageOnFail(R.mipmap.ic_default_loading_image)
+                .showImageOnLoading(R.drawable.ic_default_loading_image)
+                .showImageForEmptyUri(R.drawable.ic_default_loading_image)
+                .showImageOnFail(R.drawable.ic_default_loading_image)
                 .cacheOnDisk(true)
                 .cacheInMemory(true)
-                .bitmapConfig(Config.RGB_565)
                 .build();
         return options;
     }
@@ -62,8 +52,8 @@ public class ImageLoaderHelper {
         imageLoader.displayImage(uri, imageView, initOptionsForCommonImage(), imageLoadingListener);
     }
 
-    public static ImageLoader getImageLoader(){
-        return  imageLoader;
+    public static ImageLoader getImageLoader() {
+        return imageLoader;
     }
 
 
@@ -75,7 +65,7 @@ public class ImageLoaderHelper {
         Glide.with(context)
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(R.mipmap.ic_default_loading_image)
+                .placeholder(R.drawable.ic_default_loading_image)
                 .crossFade()
                 .into(imageView);
     }
@@ -84,7 +74,7 @@ public class ImageLoaderHelper {
         Glide.with(context)
                 .load(url)
                 .centerCrop()
-                .placeholder(R.mipmap.ic_default_loading_image)
+                .placeholder(R.drawable.ic_default_loading_image)
                 .crossFade()
                 .into(imageView);
     }
@@ -93,7 +83,7 @@ public class ImageLoaderHelper {
         Glide.with(context)
                 .load(file)
                 .centerCrop()
-                .placeholder(R.mipmap.ic_default_loading_image)
+                .placeholder(R.drawable.ic_default_loading_image)
                 .crossFade()
                 .into(imageView);
 
@@ -103,7 +93,7 @@ public class ImageLoaderHelper {
         Glide.with(context)
                 .load(uri)
                 .centerCrop()
-                .placeholder(R.mipmap.ic_default_loading_image)
+                .placeholder(R.drawable.ic_default_loading_image)
                 .crossFade()
                 .into(imageView);
 
@@ -113,15 +103,19 @@ public class ImageLoaderHelper {
         Glide.with(context)
                 .load(resourceId)
                 .centerCrop()
-                .placeholder(R.mipmap.ic_default_loading_image)
+                .placeholder(R.drawable.ic_default_loading_image)
+                .error(R.drawable.ic_default_loading_image)
                 .crossFade()
                 .into(imageView);
     }
 
 
+    public static void getBitmapFromUrlUseGlide(Context context, String url, GlideDrawableImageViewTarget glideDrawableImageViewTarget) {
+        Glide.with(context).load(url).centerCrop().placeholder(R.drawable.ic_default_loading_image).crossFade().into(glideDrawableImageViewTarget);
+    }
 
-    public static void getBitmapFromUrlUseGlide(Context context , String url , SimpleTarget<Bitmap> simpleTarget){
-        Glide.with(context).load(url).asBitmap().into(simpleTarget);
+    public static void getBitmapFromUrlUseGlide(Context context, String url, SimpleTarget<Bitmap> simpleTarget) {
+        Glide.with(context).load(url).asBitmap().centerCrop().into(simpleTarget);
     }
 
 }

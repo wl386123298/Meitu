@@ -3,12 +3,9 @@ package com.meitu.android;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -18,17 +15,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.ToxicBakery.viewpager.transforms.ScaleInOutTransformer;
-import com.ToxicBakery.viewpager.transforms.ZoomOutSlideTransformer;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.etsy.android.grid.util.DynamicHeightImageView;
-import com.lidroid.xutils.util.LogUtils;
 import com.meitu.android.model.ImageListByAlbumIdModel;
 import com.meitu.android.utils.ImageLoaderHelper;
 import com.meitu.android.utils.PaletteUtil;
 import com.meitu.android.view.PhotoViewPager;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.ArrayList;
 
@@ -183,9 +175,8 @@ public class ImageGridActivity extends BaseActivity implements AdapterView.OnIte
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent, ViewHolder holder) {
-            DynamicHeightImageView imageView = holder.obtainView(convertView, R.id.list_item_image);
+            ImageView imageView = holder.obtainView(convertView, R.id.list_item_image);
             holder.obtainView(convertView, R.id.list_item_num).setVisibility(View.GONE);
-            imageView.setHeightRatio(0.8);
             ImageLoaderHelper.displayImageForGlideNoScale(ImageGridActivity.this , images.get(position).getMid_image(), imageView);
             return convertView;
         }

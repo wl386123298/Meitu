@@ -1,36 +1,24 @@
 package com.meitu.android;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.ToxicBakery.viewpager.transforms.DefaultTransformer;
-import com.ToxicBakery.viewpager.transforms.DepthPageTransformer;
-import com.ToxicBakery.viewpager.transforms.ForegroundToBackgroundTransformer;
-import com.ToxicBakery.viewpager.transforms.ScaleInOutTransformer;
-import com.ToxicBakery.viewpager.transforms.StackTransformer;
-import com.ToxicBakery.viewpager.transforms.ZoomOutSlideTransformer;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.lidroid.xutils.HttpUtils;
 import com.meitu.android.model.ImageListByAlbumIdModel;
-import com.meitu.android.utils.DeviceUtils;
 import com.meitu.android.utils.FileUtils;
 import com.meitu.android.utils.ImageLoaderHelper;
 import com.meitu.android.utils.PaletteUtil;
@@ -41,7 +29,6 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,11 +59,11 @@ public class PreviewPictureActivity extends BaseActivity implements View.OnClick
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.preview_picture_layout);
-        findview();
+        findView();
         initData();
     }
 
-    public void findview() {
+    public void findView() {
         mToolbar = (Toolbar) findViewById(R.id.previewToolbar);
         viewPager = (PhotoViewPager) findViewById(R.id.previewPictureViewPager);
         title = (TextView) findViewById(R.id.previewTitle);
@@ -230,7 +217,7 @@ public class PreviewPictureActivity extends BaseActivity implements View.OnClick
                 MobclickAgent.onEvent(PreviewPictureActivity.this , "menu_share");
                 File cacheImagePath = ImageLoaderHelper.getImageLoader().getDiskCache().get(images.get(current_position).getMid_image());
                 if (cacheImagePath != null) {
-                    ShareUtils.shareMsg(PreviewPictureActivity.this, "分享", "", "#福利图#", cacheImagePath.getPath());
+                    ShareUtils.shareMsg(PreviewPictureActivity.this, "分享", "", "#魅图#", cacheImagePath.getPath());
                 }
 
                 break;
@@ -251,6 +238,9 @@ public class PreviewPictureActivity extends BaseActivity implements View.OnClick
         @Override
         public View instantiateItem(ViewGroup container, int position) {
             PhotoView photoView = new PhotoView(container.getContext());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                photoView.setTransitionName(getString(R.string.imageTransitionName));
+            }
             container.addView(photoView, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
             ImageLoaderHelper.displayImage(images.get(position).getMid_image(), photoView);

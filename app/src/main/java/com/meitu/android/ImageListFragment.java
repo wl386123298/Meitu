@@ -38,7 +38,6 @@ public class ImageListFragment extends Fragment implements PullLoadMoreRecyclerV
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.image_list_fragment, container, false);
         mGridView = (PullLoadMoreRecyclerView) view.findViewById(R.id.pullLoadMoreRecyclerView);
 
@@ -65,6 +64,7 @@ public class ImageListFragment extends Fragment implements PullLoadMoreRecyclerV
      */
     private void loadData(String category_id) {
         HttpUtils.getImageList(getActivity(), page, category_id, new HttpUtils.RequestResultListener<ImageListModel>() {
+
             @Override
             public void loadSuccess(List<ImageListModel> imageListModelList) {
                 mGridView.setPullLoadMoreCompleted();
@@ -101,7 +101,6 @@ public class ImageListFragment extends Fragment implements PullLoadMoreRecyclerV
             hasMore = true;
             page++;
             loadData(category_id);
-
         }
     }
 

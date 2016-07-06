@@ -56,7 +56,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
                     if (loadedImage.getHeight() > 350) {
                         params.height = loadedImage.getHeight() - 50;
                     }else if (loadedImage.getHeight()  < 200) {
-                        params.height = (int) (loadedImage.getHeight() * 0.6 + loadedImage.getHeight());
+                        params.height = (int) (loadedImage.getHeight() * 0.8 + loadedImage.getHeight());
                         LogUtils.e(params.height +"");
                     }else {
                         params.height = loadedImage.getHeight();

@@ -2,5 +2,5 @@
     <string name="app_name">魅图</string>
 
     <string name="imageTransitionName">image_transition_ame</string>
-    <string name="about_text">此APP是本人在业余时间所写，您如果觉得好，求个赞!\n如果您有任何问题，请到偶微博留言(http://weibo.com/wvitas) </string>
+    <string name="about_text">业余项目，如有疑问或者建议请到微博留言(http://weibo.com/wvitas) </string>
 </resources>

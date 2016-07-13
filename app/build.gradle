@@ -15,10 +15,51 @@ android {
 
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources true
+            zipAlignEnabled true //内存对齐
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            // 自定义输出配置
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称为donglele_wandoujia_v1.0.apk
+                        def fileName = "meitu_${variant.productFlavors[0].name}_v${defaultConfig.versionName}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+
+        debug {
             minifyEnabled false
-            proguardFiles 'proguard-rules.pro'
+            shrinkResources false
+            zipAlignEnabled false //内存对齐
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+    }
+
+    productFlavors {
+        wandoujia {}
+        tencent {}
+        c360 {}
+        baidu {}
+        donglele{}//自己服务器
+        xiaomi{}//小米市场
+        huawei{}
+        productFlavors.all { flavor ->
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        }
+    }
+
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -33,8 +74,15 @@ android {
         abortOnError false
         // 防止在发布的时候出现因MissingTranslation导致Build Failed!
         disable 'MissingTranslation'
+        checkReleaseBuilds false
+        ignoreWarnings true
+    }
+
+    dexOptions {
+        incremental false
     }
 }
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -42,15 +90,13 @@ dependencies {
     compile 'com.android.support:design:23.+'
     compile 'com.android.support:palette-v7:23.+'
     compile 'com.wuxiaolong.pullloadmorerecyclerview:library:1.0.8'
-    compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.alibaba:fastjson:1.2.6'
+    compile 'com.github.chrisbanes:PhotoView:1.2.6'
+    compile 'com.alibaba:fastjson:1.1.52.android'
     compile 'com.cesarferreira.colorize:library:0.2.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
     /*友盟反馈*/
-    compile 'com.umeng:fb:5.3.0'
+    compile 'com.umeng:fb:5.4.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
 
     compile files('libs/xUtils-2.6.14.jar')

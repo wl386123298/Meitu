@@ -6,5 +6,5 @@ package com.meitu.android.config;
  */
 public class AppConfig {
     //是否是debug模式
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 }

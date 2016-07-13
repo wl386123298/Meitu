@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.meitu.android.config.AppConfig;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -34,13 +35,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!AppConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!AppConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 }
 

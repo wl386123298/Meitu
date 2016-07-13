@@ -55,10 +55,11 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.mImageView.getLayoutParams();
                     if (loadedImage.getHeight() > 350) {
                         params.height = loadedImage.getHeight() - 50;
-                    }else if (loadedImage.getHeight()  < 200) {
-                        params.height = (int) (loadedImage.getHeight() * 0.8 + loadedImage.getHeight());
-                        LogUtils.e(params.height +"");
+                    }else if (loadedImage.getHeight()  < 250) {
+                        LogUtils.i("小于200的" + loadedImage.getHeight());
+                        params.height = (int) (loadedImage.getHeight() * 1.5);
                     }else {
+                        LogUtils.i("其他的" + loadedImage.getHeight());
                         params.height = loadedImage.getHeight();
                     }
 

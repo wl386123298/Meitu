@@ -4,69 +4,93 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:transitionName="@string/imageTransitionName"
-    android:background="#000000">
+    android:background="#000000"
+    android:transitionName="@string/imageTransitionName">
 
-    <com.meitu.android.view.PhotoViewPager
-        android:id="@+id/previewPictureViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/previewToolbar"/>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#44000000">
-
-        <TextView
-            android:id="@+id/previewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:padding="10dp"
-            android:layout_marginRight="50dp"
-            android:textColor="@color/c_white"/>
-
-        <TextView
-            android:id="@+id/previewPictureNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:paddingRight="10dp"
-            android:textColor="@color/c_white"/>
-
-
-    </RelativeLayout>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/previewToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title=""/>
 
+    <com.meitu.android.view.PhotoViewPager
+        android:id="@+id/previewPictureViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/previewToolbar"
+        android:layout_centerInParent="true"/>
+
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/previewPictureActionMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:menu_animationDelayPerItem="0"
+        app:menu_colorNormal="#43A047"
+        app:menu_colorPressed="#2E7D32"
+        app:menu_colorRipple="#ccc"
+        app:menu_fab_size="mini"
+        app:menu_icon="@mipmap/icon_dot"
+        app:menu_labels_ellipsize="end">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_save"
+            style="@style/MenuButtonsSmall.Green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_save"
+            app:fab_label="保存"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_share"
+            style="@style/MenuButtonsSmall.Green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_share"
+            app:fab_label="分享"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_preview_all"
+            style="@style/MenuButtonsSmall.Green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_grid_view"
+            app:fab_label="浏览全部"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_set_pic"
+            style="@style/MenuButtonsSmall.Green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_set_pic"
+            app:fab_label="设置壁纸"/>
+
+    </com.github.clans.fab.FloatingActionMenu>
 
 
     <RelativeLayout
         android:id="@+id/previewPictureNoNetLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/c_white"
         android:layout_below="@+id/previewToolbar"
+        android:background="@color/c_white"
         android:visibility="gone">
 
         <ImageView
-            android:layout_centerInParent="true"
             android:layout_width="200dp"
             android:layout_height="150dp"
-            android:src="@mipmap/ic_reload" />
+            android:layout_centerInParent="true"
+            android:src="@mipmap/ic_reload"/>
 
 
     </RelativeLayout>
-
 </RelativeLayout>

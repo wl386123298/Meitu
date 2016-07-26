@@ -2,7 +2,6 @@ package com.meitu.android;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -12,15 +11,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.meitu.android.model.TabModel;
 import com.meitu.android.utils.HttpUtils;
 import com.meitu.android.view.PhotoViewPager;
-import com.umeng.fb.FeedbackAgent;
+import com.umeng.onlineconfig.OnlineConfigAgent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,20 +32,18 @@ public class MainActivity extends BaseActivity {
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private TabViewPagerAdapter adapter;
-    private SharedPreferences preferences;
+    //是否打开所有的tab，为了审核
+    private boolean isForbiddenTab;
 
     @Override
     public void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         findView();
+        OnlineConfigAgent.getInstance().updateOnlineConfig(this);
         setSupportActionBar(mToolbar);
-        preferences = getSharedPreferences("setting", MODE_PRIVATE);
-        int count = preferences.getInt("firstInCount", 0);
-        count++;
-        preferences.edit().putInt("firstInCount", count).commit();
-        FeedbackAgent agent = new FeedbackAgent(MainActivity.this);
-        agent.sync();
-        agent.closeAudioFeedback();
+        String onLineConfigValue = OnlineConfigAgent.getInstance().getConfigParams(this, "IS_FORBIDDEN_TAB");
+        isForbiddenTab = "1".equals(onLineConfigValue) || TextUtils.isEmpty(onLineConfigValue);
+        //ToastUtil.showShortToast(this ,  OnlineConfigAgent.getInstance().getConfigParams(this , "IS_FORBIDDEN_TAB"));
     }
 
     public void findView() {
@@ -54,19 +53,18 @@ public class MainActivity extends BaseActivity {
         mTabLayout.setTabTextColors(Color.LTGRAY, Color.WHITE);//设置文本在选中和未选中时候的颜色
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
-
         HttpUtils.getMenu(this, new HttpUtils.RequestResultListener<TabModel>() {
             @Override
             public void loadSuccess(List<TabModel> tabList) {
                 adapter = new TabViewPagerAdapter(getSupportFragmentManager());
-                if (preferences.getInt("firstInCount", 0) < 3) {
-                    List<TabModel> noSexList = new ArrayList<TabModel>();
+                if (isForbiddenTab) {
+                    List<TabModel> noSexList = new ArrayList<>();
                     Iterator iterator = tabList.iterator();
+                    List<String> forbiddenList = Arrays.asList("校花", "萌女", "气质", "明星", "非主流", "清纯");
 
                     while (iterator.hasNext()) {
                         TabModel model = (TabModel) iterator.next();
-                        if ("明星".equals(model.getName())||"非主流".equals(model.getName())
-                                ||"模特".equals(model.getName()) || "性感".equals(model.getName()) || "美腿".equals(model.getName())) {
+                        if (forbiddenList.contains(model.getName())) {
                             iterator.remove();
                             tabList.remove(model);
                         }
@@ -155,9 +153,9 @@ public class MainActivity extends BaseActivity {
                         })
                         .show();
                 break;
-            case R.id.menu_feedback://意见反馈
+            /*case R.id.menu_feedback://意见反馈
                 new FeedbackAgent(MainActivity.this).startFeedbackActivity();
-                break;
+                break;*/
         }
         return super.onOptionsItemSelected(item);
     }

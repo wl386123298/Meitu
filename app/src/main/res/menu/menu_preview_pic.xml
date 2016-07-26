@@ -5,21 +5,9 @@
 
 
     <item
-        android:id="@+id/menu_save"
+        android:id="@+id/menu_num"
         android:orderInCategory="100"
-        android:title="保存"
-        app:showAsAction="never"/>
+        android:title="1/1"
+        app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/menu_share"
-        android:orderInCategory="100"
-        android:title="分享"
-        app:showAsAction="never|withText"/>
-
-    <item
-        android:id="@+id/menu_grid"
-        android:icon="@mipmap/icon_grid_view"
-        android:orderInCategory="100"
-        android:title="查看所有"
-        app:showAsAction="ifRoom"/>
 </menu>

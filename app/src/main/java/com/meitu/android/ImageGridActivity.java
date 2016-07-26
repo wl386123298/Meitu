@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.meitu.android.model.ImageListByAlbumIdModel;
+import com.meitu.android.utils.DeviceUtils;
 import com.meitu.android.utils.ImageLoaderHelper;
 import com.meitu.android.utils.PaletteUtil;
 import com.meitu.android.view.PhotoViewPager;
@@ -90,14 +91,14 @@ public class ImageGridActivity extends BaseActivity implements AdapterView.OnIte
 
 
     private void showImageDialog(int position) {
-        PhotoViewPager photoViewPager  = new PhotoViewPager(this);
+        PhotoViewPager photoViewPager = new PhotoViewPager(this);
         photoViewPager.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         //photoViewPager.setPageTransformer(true , new ZoomOutSlideTransformer());
         PhotoViewAdapter adapter = new PhotoViewAdapter();
         photoViewPager.setAdapter(adapter);
 
-        if (images != null){
+        if (images != null) {
             adapter.notifyDataSetChanged();
         }
 
@@ -110,8 +111,8 @@ public class ImageGridActivity extends BaseActivity implements AdapterView.OnIte
         dialog.show();
 
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-        params.width =  WindowManager.LayoutParams.MATCH_PARENT;
-        params.height =  WindowManager.LayoutParams.MATCH_PARENT;
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
 
         Window window = dialog.getWindow();
         window.setAttributes(params);
@@ -177,7 +178,12 @@ public class ImageGridActivity extends BaseActivity implements AdapterView.OnIte
         public View getView(int position, View convertView, ViewGroup parent, ViewHolder holder) {
             ImageView imageView = holder.obtainView(convertView, R.id.list_item_image);
             holder.obtainView(convertView, R.id.list_item_num).setVisibility(View.GONE);
-            ImageLoaderHelper.displayImageForGlideNoScale(ImageGridActivity.this , images.get(position).getMid_image(), imageView);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.height = DeviceUtils.getPixelFromDip(getResources().getDisplayMetrics(), 120);
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            imageView.setLayoutParams(params);
+
+            ImageLoaderHelper.displayImage( images.get(position).getMid_image(), imageView);
             return convertView;
         }
 

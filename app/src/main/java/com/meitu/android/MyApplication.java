@@ -9,6 +9,7 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.umeng.onlineconfig.OnlineConfigAgent;
 
 /**
  * @Author: wl
@@ -21,6 +22,9 @@ public class MyApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+        //默认为false，不是debug模式前后得10分钟配置的才会变
+        //这里需要动态获取配置信息，所以设置为true
+        OnlineConfigAgent.getInstance().setDebugMode(true);
         initImageLoader(getApplicationContext());
     }
 

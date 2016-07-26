@@ -25,7 +25,7 @@ android {
                 variant.outputs.each { output ->
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                        // 输出apk名称为donglele_wandoujia_v1.0.apk
+                        // 输出apk名称为meitu_wandoujia_v1.0.apk
                         def fileName = "meitu_${variant.productFlavors[0].name}_v${defaultConfig.versionName}.apk"
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
@@ -52,9 +52,7 @@ android {
         tencent {}
         c360 {}
         baidu {}
-        donglele{}//自己服务器
         xiaomi{}//小米市场
-        huawei{}
         productFlavors.all { flavor ->
             flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
         }
@@ -77,10 +75,6 @@ android {
         checkReleaseBuilds false
         ignoreWarnings true
     }
-
-    dexOptions {
-        incremental false
-    }
 }
 
 
@@ -95,9 +89,8 @@ dependencies {
     compile 'com.alibaba:fastjson:1.1.52.android'
     compile 'com.cesarferreira.colorize:library:0.2.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    /*友盟反馈*/
-    compile 'com.umeng:fb:5.4.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
-
     compile files('libs/xUtils-2.6.14.jar')
+    compile files('libs/umeng-onlineconfig_v1.0.0.jar')
+    compile 'com.github.clans:fab:1.6.4'
 }

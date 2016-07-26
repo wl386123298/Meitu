@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class ImageListFragment extends Fragment implements PullLoadMoreRecyclerV
     private PullLoadMoreRecyclerView mGridView;
     private List<ImageListModel> images = new ArrayList<>();
     private boolean hasMore;//是否有更多
+    private AlertDialog dialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

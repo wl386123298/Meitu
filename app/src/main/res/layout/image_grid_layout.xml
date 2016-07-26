@@ -8,6 +8,7 @@
         layout="@layout/inclue_toolbar_layout"/>
 
     <GridView
+        android:layout_gravity="center"
         android:layout_margin="5dp"
         android:id="@+id/imageGridview"
         android:layout_width="match_parent"
